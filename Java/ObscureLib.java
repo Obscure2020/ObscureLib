@@ -54,43 +54,44 @@ public final class ObscureLib {
             return "negative " + longToEnglish(-number);
         }
         if(number < 20){
-            switch((int) number){
-                case 0: return "zero";
-                case 1: return "one";
-                case 2: return "two";
-                case 3: return "three";
-                case 4: return "four";
-                case 5: return "five";
-                case 6: return "six";
-                case 7: return "seven";
-                case 8: return "eight";
-                case 9: return "nine";
-                case 10: return "ten";
-                case 11: return "eleven";
-                case 12: return "twelve";
-                case 13: return "thirteen";
-                case 14: return "fourteen";
-                case 15: return "fifteen";
-                case 16: return "sixteen";
-                case 17: return "seventeen";
-                case 18: return "eighteen";
-                case 19: return "nineteen";
-                default: throw new AssertionError("This should not be possible.\nFailiure in the \"under 20\" switch statement.");
-            }
+            String result = switch((int) number){
+                case 0 -> "zero";
+                case 1 -> "one";
+                case 2 -> "two";
+                case 3 -> "three";
+                case 4 -> "four";
+                case 5 -> "five";
+                case 6 -> "six";
+                case 7 -> "seven";
+                case 8 -> "eight";
+                case 9 -> "nine";
+                case 10 -> "ten";
+                case 11 -> "eleven";
+                case 12 -> "twelve";
+                case 13 -> "thirteen";
+                case 14 -> "fourteen";
+                case 15 -> "fifteen";
+                case 16 -> "sixteen";
+                case 17 -> "seventeen";
+                case 18 -> "eighteen";
+                case 19 -> "nineteen";
+                default -> throw new AssertionError("This should not be possible.\nFailiure in the \"under 20\" switch statement.");
+            };
+            return result;
         }
         if(number < 100){
             int tens = (int) ((number / 10) % 10);
             int ones = (int) (number % 10);
             String prefix = switch(tens){
-                case 2: yield "twenty";
-                case 3: yield "thirty";
-                case 4: yield "forty";
-                case 5: yield "fifty";
-                case 6: yield "sixty";
-                case 7: yield "seventy";
-                case 8: yield "eighty";
-                case 9: yield "ninety";
-                default: throw new AssertionError("This should not be possible.\nFailiure in the \"under 100\" switch statement.");
+                case 2 -> "twenty";
+                case 3 -> "thirty";
+                case 4 -> "forty";
+                case 5 -> "fifty";
+                case 6 -> "sixty";
+                case 7 -> "seventy";
+                case 8 -> "eighty";
+                case 9 -> "ninety";
+                default -> throw new AssertionError("This should not be possible.\nFailiure in the \"under 100\" switch statement.");
             };
             if(ones == 0){
                 return prefix;
