@@ -54,7 +54,7 @@ public final class ObscureLib {
             return "negative " + longToEnglish(-number);
         }
         if(number < 20){
-            String result = switch((int) number){
+            return switch((int) number){
                 case 0 -> "zero";
                 case 1 -> "one";
                 case 2 -> "two";
@@ -77,7 +77,6 @@ public final class ObscureLib {
                 case 19 -> "nineteen";
                 default -> throw new AssertionError("This should not be possible.\nFailiure in the \"under 20\" switch statement.");
             };
-            return result;
         }
         if(number < 100){
             int tens = (int) ((number / 10) % 10);
@@ -116,6 +115,106 @@ public final class ObscureLib {
             long chunk = residual % 1000;
             if(chunk > 0){
                 chunks.add(longToEnglish(chunk) + suffixes[stage]);
+            }
+            stage++;
+            residual /= 1000;
+        }
+        StringBuilder sb = new StringBuilder();
+        while(chunks.size() > 1){
+            sb.append(chunks.removeLast());
+            sb.append(", ");
+        }
+        sb.append(chunks.removeLast());
+        return sb.toString();
+    }
+
+    public static String longToEnglishOrdinal(long number){
+        if(number < 0){
+            if(number == Long.MIN_VALUE){
+                return "negative nine quintillion, two hundred and twenty-three quadrillion, three hundred and seventy-two trillion, thirty-six billion, eight hundred and fifty-four million, seven hundred and seventy-five thousand, eight hundred and eighth";
+            }
+            return "negative " + longToEnglishOrdinal(-number);
+        }
+        if(number < 20){
+            return switch((int) number){
+                case 0 -> "zeroth";
+                case 1 -> "first";
+                case 2 -> "second";
+                case 3 -> "third";
+                case 4 -> "fourth";
+                case 5 -> "fifth";
+                case 6 -> "sixth";
+                case 7 -> "seventh";
+                case 8 -> "eighth";
+                case 9 -> "ninth";
+                case 10 -> "tenth";
+                case 11 -> "eleventh";
+                case 12 -> "twelfth";
+                case 13 -> "thirteenth";
+                case 14 -> "fourteenth";
+                case 15 -> "fifteenth";
+                case 16 -> "sixteenth";
+                case 17 -> "seventeenth";
+                case 18 -> "eighteenth";
+                case 19 -> "nineteenth";
+                default -> throw new AssertionError("This should not be possible.\nFailiure in the \"under 20\" switch statement.");
+            };
+        }
+        if(number < 100){
+            int tens = (int) ((number / 10) % 10);
+            int ones = (int) (number % 10);
+            if(ones == 0){
+                return switch(tens){
+                    case 2 -> "twentieth";
+                    case 3 -> "thirtieth";
+                    case 4 -> "fortieth";
+                    case 5 -> "fiftieth";
+                    case 6 -> "sixtieth";
+                    case 7 -> "seventieth";
+                    case 8 -> "eightieth";
+                    case 9 -> "ninetieth";
+                    default -> throw new AssertionError("This should not be possible.\nFailiure in the \"under 100, ones equals 0\" switch statement.");
+                };
+            }
+            String prefix = switch(tens){
+                case 2 -> "twenty";
+                case 3 -> "thirty";
+                case 4 -> "forty";
+                case 5 -> "fifty";
+                case 6 -> "sixty";
+                case 7 -> "seventy";
+                case 8 -> "eighty";
+                case 9 -> "ninety";
+                default -> throw new AssertionError("This should not be possible.\nFailiure in the \"under 100, ones nonzero\" switch statement.");
+            };
+            return prefix + "-" + longToEnglishOrdinal(ones);
+        }
+        if(number < 1000){
+            int hundreds = (int) ((number / 100) % 10);
+            int less = (int) (number % 100);
+            String base = longToEnglish(hundreds) + " hundred";
+            if(less == 0){
+                return base + "th";
+            }
+            return base + " and " + longToEnglishOrdinal(less);
+        }
+        //We now know the number is at least 1000.
+        ArrayList<String> chunks = new ArrayList<>();
+        String[] suffixes = {" thousand", " million", " billion", " trillion", " quadrillion", " quintillion"};
+        int stage = -1;
+        long residual = number;
+        while(residual > 0){
+            long chunk = residual % 1000;
+            if(chunk > 0){
+                if(stage < 0){
+                    chunks.add(longToEnglishOrdinal(chunk));
+                } else {
+                    if(chunks.isEmpty()){
+                        chunks.add(longToEnglish(chunk) + suffixes[stage] + "th");
+                    } else {
+                        chunks.add(longToEnglish(chunk) + suffixes[stage]);
+                    }
+                }
             }
             stage++;
             residual /= 1000;
