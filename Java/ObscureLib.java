@@ -237,32 +237,15 @@ public final class ObscureLib {
     }
 
     public static String longToEnglishOrdinalSuffix(long number){
-        if(number < 0){
-            if(number == Long.MIN_VALUE) return "th";
-            return longToEnglishOrdinalSuffix(-number);
-        }
-        if(number >= 100) return longToEnglishOrdinalSuffix(number % 100);
-        //We now know the number is at most 99.
-        return switch((int) number){
-            case 1:
-                yield "st";
-            case 2:
-                yield "nd";
-            case 3:
-                yield "rd";
-            case 0:
-            case 4:
-            case 5:
-            case 6:
-            case 7:
-            case 8:
-            case 9:
-            case 11:
-            case 12:
-            case 13:
-                yield "th";
-            default:
-                yield longToEnglishOrdinalSuffix(number % 10);
+        int view = (int) Math.abs(number % 100);
+        return switch(view){
+            case 11, 12, 13 -> "th";
+            default -> switch(view % 10){
+                case 1 -> "st";
+                case 2 -> "nd";
+                case 3 -> "rd";
+                default -> "th";
+            };
         };
     }
 
