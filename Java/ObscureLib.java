@@ -177,17 +177,17 @@ public final class ObscureLib {
                 };
             }
             String prefix = switch(tens){
-                case 2 -> "twenty";
-                case 3 -> "thirty";
-                case 4 -> "forty";
-                case 5 -> "fifty";
-                case 6 -> "sixty";
-                case 7 -> "seventy";
-                case 8 -> "eighty";
-                case 9 -> "ninety";
+                case 2 -> "twenty-";
+                case 3 -> "thirty-";
+                case 4 -> "forty-";
+                case 5 -> "fifty-";
+                case 6 -> "sixty-";
+                case 7 -> "seventy-";
+                case 8 -> "eighty-";
+                case 9 -> "ninety-";
                 default -> throw new AssertionError("This should not be possible.\nFailiure in the \"under 100, ones nonzero\" switch statement.");
             };
-            return prefix + "-" + longToEnglishOrdinal(ones);
+            return prefix + longToEnglishOrdinal(ones);
         }
         if(number < 1000){
             int hundreds = (int) ((number / 100) % 10);
