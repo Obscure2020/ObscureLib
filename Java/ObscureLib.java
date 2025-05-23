@@ -110,21 +110,27 @@ public final class ObscureLib {
         ArrayList<String> chunks = new ArrayList<>();
         String[] suffixes = {"", " thousand", " million", " billion", " trillion", " quadrillion", " quintillion"};
         int stage = 0;
+        int lastAddedStage = -1;
         long residual = number;
         while(residual > 0){
             long chunk = residual % 1000;
             if(chunk > 0){
-                chunks.add(longToEnglish(chunk) + suffixes[stage]);
+                String body = longToEnglish(chunk) + suffixes[stage];
+                String joiner = ", ";
+                if(chunks.isEmpty()){
+                    joiner = "";
+                }
+                if((lastAddedStage == 0) && ((number % 1000) < 100)){
+                    joiner = " and ";
+                }
+                chunks.add(body + joiner);
+                lastAddedStage = stage;
             }
             stage++;
             residual /= 1000;
         }
         StringBuilder sb = new StringBuilder();
-        while(chunks.size() > 1){
-            sb.append(chunks.removeLast());
-            sb.append(", ");
-        }
-        sb.append(chunks.removeLast());
+        while(!chunks.isEmpty()) sb.append(chunks.removeLast());
         return sb.toString();
     }
 
@@ -202,6 +208,7 @@ public final class ObscureLib {
         ArrayList<String> chunks = new ArrayList<>();
         String[] suffixes = {" thousand", " million", " billion", " trillion", " quadrillion", " quintillion"};
         int stage = -1;
+        int lastAddedStage = -2;
         long residual = number;
         while(residual > 0){
             long chunk = residual % 1000;
@@ -212,19 +219,20 @@ public final class ObscureLib {
                     if(chunks.isEmpty()){
                         chunks.add(longToEnglish(chunk) + suffixes[stage] + "th");
                     } else {
-                        chunks.add(longToEnglish(chunk) + suffixes[stage]);
+                        String joiner = ", ";
+                        if((lastAddedStage == -1) && ((number % 1000) < 100)){
+                            joiner = " and ";
+                        }
+                        chunks.add(longToEnglish(chunk) + suffixes[stage] + joiner);
                     }
                 }
+                lastAddedStage = stage;
             }
             stage++;
             residual /= 1000;
         }
         StringBuilder sb = new StringBuilder();
-        while(chunks.size() > 1){
-            sb.append(chunks.removeLast());
-            sb.append(", ");
-        }
-        sb.append(chunks.removeLast());
+        while(!chunks.isEmpty()) sb.append(chunks.removeLast());
         return sb.toString();
     }
 
