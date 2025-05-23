@@ -54,34 +54,23 @@ public final class ObscureLib {
         return message.codePoints().sorted().distinct().allMatch(i -> (Arrays.binarySearch(alphabet_codepoints, i) >= 0));
     }
 
-    public static String integerStringAddCommas(String numeric){
-        obscureAssert(matchesAlphabet(numeric, "-0123456789"), "Provided string uses characters not allowed in integers.");
-        boolean negative = false;
-        int first_minus = numeric.indexOf('-');
-        if(first_minus >= 0){
-            obscureAssert(first_minus == 0, "Provided string breaks expected format by featuring a \"-\" that is not at the beginning.");
-            for(int i=1; i<numeric.length(); i++){
-                obscureAssert(numeric.charAt(i) != '-', "Provided string breaks expected format by featuring more than one \"-\" character.");
-            }
-            negative = true;
-        }
-        if(negative){
-            if(numeric.length() < 6) return numeric;
-        } else {
-            if(numeric.length() < 5) return numeric;
+    public static String longWithCommas(long number){
+        String plain = Long.toString(number);
+        if((number > -10000) && (number < 10000)){
+            return plain;
         }
         StringBuilder sb = new StringBuilder();
         int count = 0;
-        int stop = negative ? 1 : 0;
-        for(int i=numeric.length()-1; i>=stop; i--){
+        int stop = (number < 0) ? 1 : 0;
+        for(int i=plain.length()-1; i>=stop; i--){
             if(count == 3){
                 sb.append(',');
                 count = 0;
             }
-            sb.append(numeric.charAt(i));
+            sb.append(plain.charAt(i));
             count++;
         }
-        if(negative) sb.append('-');
+        if(number < 0) sb.append('-');
         return sb.reverse().toString();
     }
 
@@ -290,6 +279,10 @@ public final class ObscureLib {
 
     public static String longToEnglishOrdinalNumeric(long number){
         return Long.toString(number) + longToEnglishOrdinalSuffix(number);
+    }
+
+    public static String longToEnglishOrdinalNumericCommas(long number){
+        return longWithCommas(number) + longToEnglishOrdinalSuffix(number);
     }
 
 }
