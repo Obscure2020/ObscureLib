@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public final class ObscureLib {
 
@@ -44,6 +45,44 @@ public final class ObscureLib {
         int spot = full.indexOf(match);
         obscureAssert(spot>=0, "Slice match target not found in full string.");
         return full.substring(0, spot + match.length());
+    }
+
+    public static boolean matchesAlphabet(String message, String alphabet){
+        if(message.length() == 0) return true;
+        if(alphabet.length() == 0) return false;
+        int[] alphabet_codepoints = alphabet.codePoints().sorted().distinct().toArray();
+        return message.codePoints().sorted().distinct().allMatch(i -> (Arrays.binarySearch(alphabet_codepoints, i) >= 0));
+    }
+
+    public static String integerStringAddCommas(String numeric){
+        obscureAssert(matchesAlphabet(numeric, "-0123456789"), "Provided string uses characters not allowed in integers.");
+        boolean negative = false;
+        int first_minus = numeric.indexOf('-');
+        if(first_minus >= 0){
+            obscureAssert(first_minus == 0, "Provided string breaks expected format by featuring a \"-\" that is not at the beginning.");
+            for(int i=1; i<numeric.length(); i++){
+                obscureAssert(numeric.charAt(i) != '-', "Provided string breaks expected format by featuring more than one \"-\" character.");
+            }
+            negative = true;
+        }
+        if(negative){
+            if(numeric.length() < 6) return numeric;
+        } else {
+            if(numeric.length() < 5) return numeric;
+        }
+        StringBuilder sb = new StringBuilder();
+        int count = 0;
+        int stop = negative ? 1 : 0;
+        for(int i=numeric.length()-1; i>=stop; i--){
+            if(count == 3){
+                sb.append(',');
+                count = 0;
+            }
+            sb.append(numeric.charAt(i));
+            count++;
+        }
+        if(negative) sb.append('-');
+        return sb.reverse().toString();
     }
 
     public static String longToEnglish(long number){
