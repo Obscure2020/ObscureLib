@@ -1,7 +1,16 @@
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public final class ObscureLib {
+
+    public static final BigInteger BIG_ZERO = BigInteger.ZERO;
+    public static final BigInteger BIG_ONE = BigInteger.ONE;
+    public static final BigInteger BIG_TWO = BigInteger.TWO;
+    public static final BigInteger BIG_TEN = BigInteger.TEN;
+    public static final BigInteger BIG_TWENTY = BIG_TEN.multiply(BIG_TWO);
+    public static final BigInteger BIG_HUNDRED = BIG_TEN.multiply(BIG_TEN);
+    public static final BigInteger BIG_THOUSAND = BIG_TEN.multiply(BIG_HUNDRED);
 
     private static void obscureAssert(boolean check, String message){
         if(!check){
@@ -284,5 +293,17 @@ public final class ObscureLib {
     public static String longToEnglishOrdinalNumericCommas(long number){
         return longWithCommas(number) + longToEnglishOrdinalSuffix(number);
     }
+
+    //bigWithCommas()
+
+    //bigToEnglish()
+
+    //bigToEnglishOrdinal()
+
+    //bigToEnglishOrdinalSuffix()
+
+    //bigToEnglishOrdinalNumeric()
+
+    //bigToEnglishOrdinalNumericCommas()
 
 }
