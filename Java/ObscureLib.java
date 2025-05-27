@@ -12,7 +12,6 @@ public final class ObscureLib {
     private static final BigInteger BIG_HUNDRED = BIG_TEN.multiply(BIG_TEN);
     private static final BigInteger BIG_THOUSAND = BIG_TEN.multiply(BIG_HUNDRED);
     private static final BigInteger BIG_TEN_THOUSAND = BIG_TEN.multiply(BIG_THOUSAND);
-    private static final BigInteger BIG_NEGATIVE_TEN_THOUSAND = BIG_TEN_THOUSAND.negate();
     private static final BigInteger BIG_LONG_MAX = new BigInteger(Long.toString(Long.MAX_VALUE));
     private static final BigInteger BIG_UPPER_EXCLUDE = BIG_TEN.pow(66);
 
@@ -160,8 +159,7 @@ public final class ObscureLib {
                 String joiner = ", ";
                 if(chunks.isEmpty()){
                     joiner = "";
-                }
-                if((lastAddedStage == 0) && ((number % 1000) < 100)){
+                } else if((lastAddedStage == 0) && ((number % 1000) < 100)){
                     joiner = " and ";
                 }
                 chunks.add(body + joiner);
@@ -300,7 +298,7 @@ public final class ObscureLib {
 
     public static String bigWithCommas(BigInteger number){
         String plain = number.toString();
-        if((number.compareTo(BIG_NEGATIVE_TEN_THOUSAND) > 0) && (number.compareTo(BIG_TEN_THOUSAND) < 0)){
+        if(number.abs().compareTo(BIG_TEN_THOUSAND) < 0){
             return plain;
         }
         StringBuilder sb = new StringBuilder();
@@ -323,7 +321,7 @@ public final class ObscureLib {
         if(number.compareTo(BIG_ZERO) < 0){
             return "negative " + bigToEnglish(number.negate());
         }
-        obscureAssert((number.compareTo(BIG_UPPER_EXCLUDE) < 0), "Currently only numbers X such that -10^66 < x < 10^66 are supported.");
+        obscureAssert((number.compareTo(BIG_UPPER_EXCLUDE) < 0), "Currently only BigIntegers in the range (-10^66, 10^66) are supported.");
         if(number.compareTo(BIG_LONG_MAX) <= 0){
             return longToEnglish(number.longValue());
         }
@@ -341,8 +339,7 @@ public final class ObscureLib {
                 String joiner = ", ";
                 if(chunks.isEmpty()){
                     joiner = "";
-                }
-                if((lastAddedStage == 0) && (number.mod(BIG_THOUSAND).compareTo(BIG_HUNDRED) < 0)){
+                } else if((lastAddedStage == 0) && (number.mod(BIG_THOUSAND).compareTo(BIG_HUNDRED) < 0)){
                     joiner = " and ";
                 }
                 chunks.add(body + joiner);
