@@ -12,6 +12,7 @@ public final class ObscureLib {
     private static final BigInteger BIG_HUNDRED = BIG_TEN.multiply(BIG_TEN);
     private static final BigInteger BIG_THOUSAND = BIG_TEN.multiply(BIG_HUNDRED);
     private static final BigInteger BIG_TEN_THOUSAND = BIG_TEN.multiply(BIG_THOUSAND);
+    private static final BigInteger BIG_NEGATIVE_TEN_THOUSAND = BIG_TEN_THOUSAND.negate();
     private static final BigInteger BIG_LONG_MAX = new BigInteger(Long.toString(Long.MAX_VALUE));
 
     private static void obscureAssert(boolean check, String message){
@@ -296,7 +297,26 @@ public final class ObscureLib {
         return longWithCommas(number) + longToEnglishOrdinalSuffix(number);
     }
 
-    //bigWithCommas()
+    public static String bigWithCommas(BigInteger number){
+        String plain = number.toString();
+        if((number.compareTo(BIG_NEGATIVE_TEN_THOUSAND) > 0) && (number.compareTo(BIG_TEN_THOUSAND) < 0)){
+            return plain;
+        }
+        StringBuilder sb = new StringBuilder();
+        int count = 0;
+        boolean negative = number.compareTo(BIG_ZERO) < 0;
+        int stop = negative ? 1 : 0;
+        for(int i=plain.length()-1; i>=stop; i--){
+            if(count == 3){
+                sb.append(',');
+                count = 0;
+            }
+            sb.append(plain.charAt(i));
+            count++;
+        }
+        if(negative) sb.append('-');
+        return sb.reverse().toString();
+    }
 
     //bigToEnglish()
 
