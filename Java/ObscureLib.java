@@ -14,6 +14,7 @@ public final class ObscureLib {
     private static final BigInteger BIG_TEN_THOUSAND = BIG_TEN.multiply(BIG_THOUSAND);
     private static final BigInteger BIG_NEGATIVE_TEN_THOUSAND = BIG_TEN_THOUSAND.negate();
     private static final BigInteger BIG_LONG_MAX = new BigInteger(Long.toString(Long.MAX_VALUE));
+    private static final BigInteger BIG_UPPER_EXCLUDE = BIG_TEN.pow(66);
 
     private static void obscureAssert(boolean check, String message){
         if(!check){
@@ -318,7 +319,42 @@ public final class ObscureLib {
         return sb.reverse().toString();
     }
 
-    //bigToEnglish()
+    public static String bigToEnglish(BigInteger number){
+        if(number.compareTo(BIG_ZERO) < 0){
+            return "negative " + bigToEnglish(number.negate());
+        }
+        obscureAssert((number.compareTo(BIG_UPPER_EXCLUDE) < 0), "Currently only numbers X such that -10^66 < x < 10^66 are supported.");
+        if(number.compareTo(BIG_LONG_MAX) <= 0){
+            return longToEnglish(number.longValue());
+        }
+        //We now know the number is at least one greater than Long.MAX_VALUE.
+        ArrayList<String> chunks = new ArrayList<>();
+        String[] suffixes = {"", " thousand", " million", " billion", " trillion", " quadrillion", " quintillion", " sextillion", " septillion", " octillion", " nonillion", " decillion", " undecillion", " duodecillion", " tredecillion", " quattuordecillion", " quindecillion", " sexdecillion", " septendecillion", " octodecillion", " novemdecillion", " vigintillion"};
+        int stage = 0;
+        int lastAddedStage = -1;
+        BigInteger residual = number;
+        while(residual.compareTo(BIG_ZERO) > 0){
+            BigInteger[] chop = residual.divideAndRemainder(BIG_THOUSAND);
+            long chunk = chop[1].longValue();
+            if(chunk > 0){
+                String body = longToEnglish(chunk) + suffixes[stage];
+                String joiner = ", ";
+                if(chunks.isEmpty()){
+                    joiner = "";
+                }
+                if((lastAddedStage == 0) && (number.mod(BIG_THOUSAND).compareTo(BIG_HUNDRED) < 0)){
+                    joiner = " and ";
+                }
+                chunks.add(body + joiner);
+                lastAddedStage = stage;
+            }
+            stage++;
+            residual = chop[0];
+        }
+        StringBuilder sb = new StringBuilder();
+        while(!chunks.isEmpty()) sb.append(chunks.removeLast());
+        return sb.toString();
+    }
 
     //bigToEnglishOrdinal()
 
