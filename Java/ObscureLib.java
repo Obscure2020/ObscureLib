@@ -4,13 +4,15 @@ import java.util.Arrays;
 
 public final class ObscureLib {
 
-    public static final BigInteger BIG_ZERO = BigInteger.ZERO;
-    public static final BigInteger BIG_ONE = BigInteger.ONE;
-    public static final BigInteger BIG_TWO = BigInteger.TWO;
-    public static final BigInteger BIG_TEN = BigInteger.TEN;
-    public static final BigInteger BIG_TWENTY = BIG_TEN.multiply(BIG_TWO);
-    public static final BigInteger BIG_HUNDRED = BIG_TEN.multiply(BIG_TEN);
-    public static final BigInteger BIG_THOUSAND = BIG_TEN.multiply(BIG_HUNDRED);
+    private static final BigInteger BIG_ZERO = BigInteger.ZERO;
+    private static final BigInteger BIG_ONE = BigInteger.ONE;
+    private static final BigInteger BIG_TWO = BigInteger.TWO;
+    private static final BigInteger BIG_TEN = BigInteger.TEN;
+    private static final BigInteger BIG_TWENTY = BIG_TEN.multiply(BIG_TWO);
+    private static final BigInteger BIG_HUNDRED = BIG_TEN.multiply(BIG_TEN);
+    private static final BigInteger BIG_THOUSAND = BIG_TEN.multiply(BIG_HUNDRED);
+    private static final BigInteger BIG_TEN_THOUSAND = BIG_TEN.multiply(BIG_THOUSAND);
+    private static final BigInteger BIG_LONG_MAX = new BigInteger(Long.toString(Long.MAX_VALUE));
 
     private static void obscureAssert(boolean check, String message){
         if(!check){
