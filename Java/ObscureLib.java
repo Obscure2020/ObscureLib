@@ -252,7 +252,7 @@ public final class ObscureLib {
         while(residual > 0){
             long chunk = residual % 1000;
             if(chunk > 0){
-                if(stage < 0){
+                if(stage < 1){
                     chunks.add(longToEnglishOrdinal(chunk));
                 } else {
                     if(chunks.isEmpty()){
@@ -352,7 +352,45 @@ public final class ObscureLib {
         return sb.toString();
     }
 
-    //bigToEnglishOrdinal()
+    public static String bigToEnglishOrdinal(BigInteger number){
+        if(number.compareTo(BIG_ZERO) < 0){
+            return "negative " + bigToEnglishOrdinal(number.negate());
+        }
+        obscureAssert((number.compareTo(BIG_UPPER_EXCLUDE) < 0), "Currently only BigIntegers in the range (-10^66, 10^66) are supported.");
+        if(number.compareTo(BIG_LONG_MAX) <= 0){
+            return longToEnglishOrdinal(number.longValue());
+        }
+        //We now know the number is at least one greater than Long.MAX_VALUE;
+        ArrayList<String> chunks = new ArrayList<>();
+        int stage = 0;
+        int lastAddedStage = -1;
+        BigInteger residual = number;
+        while(residual.compareTo(BIG_ZERO) > 0){
+            BigInteger[] chop = residual.divideAndRemainder(BIG_THOUSAND);
+            long chunk = chop[1].longValue();
+            if(chunk > 0){
+                if(stage < 1){
+                    chunks.add(longToEnglishOrdinal(chunk));
+                } else {
+                    if(chunks.isEmpty()){
+                        chunks.add(longToEnglish(chunk) + ENGLISH_SUFFIXES[stage] + "th");
+                    } else {
+                        String joiner = ", ";
+                        if((lastAddedStage == 0) && (number.mod(BIG_THOUSAND).compareTo(BIG_HUNDRED) < 0)){
+                            joiner = " and ";
+                        }
+                        chunks.add(longToEnglish(chunk) + ENGLISH_SUFFIXES[stage] + joiner);
+                    }
+                }
+                lastAddedStage = stage;
+            }
+            stage++;
+            residual = chop[0];
+        }
+        StringBuilder sb = new StringBuilder();
+        while(!chunks.isEmpty()) sb.append(chunks.removeLast());
+        return sb.toString();
+    }
 
     //bigToEnglishOrdinalSuffix()
 
