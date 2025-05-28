@@ -15,6 +15,8 @@ public final class ObscureLib {
     private static final BigInteger BIG_LONG_MAX = new BigInteger(Long.toString(Long.MAX_VALUE));
     private static final BigInteger BIG_UPPER_EXCLUDE = BIG_TEN.pow(66);
 
+    private static final String[] ENGLISH_SUFFIXES = {"", " thousand", " million", " billion", " trillion", " quadrillion", " quintillion", " sextillion", " septillion", " octillion", " nonillion", " decillion", " undecillion", " duodecillion", " tredecillion", " quattuordecillion", " quindecillion", " sexdecillion", " septendecillion", " octodecillion", " novemdecillion", " vigintillion"};
+
     private static void obscureAssert(boolean check, String message){
         if(!check){
             throw new AssertionError(message);
@@ -148,14 +150,13 @@ public final class ObscureLib {
         }
         //We now know the number is at least 1000.
         ArrayList<String> chunks = new ArrayList<>();
-        String[] suffixes = {"", " thousand", " million", " billion", " trillion", " quadrillion", " quintillion"};
         int stage = 0;
         int lastAddedStage = -1;
         long residual = number;
         while(residual > 0){
             long chunk = residual % 1000;
             if(chunk > 0){
-                String body = longToEnglish(chunk) + suffixes[stage];
+                String body = longToEnglish(chunk) + ENGLISH_SUFFIXES[stage];
                 String joiner = ", ";
                 if(chunks.isEmpty()){
                     joiner = "";
@@ -245,9 +246,8 @@ public final class ObscureLib {
         }
         //We now know the number is at least 1000.
         ArrayList<String> chunks = new ArrayList<>();
-        String[] suffixes = {" thousand", " million", " billion", " trillion", " quadrillion", " quintillion"};
-        int stage = -1;
-        int lastAddedStage = -2;
+        int stage = 0;
+        int lastAddedStage = -1;
         long residual = number;
         while(residual > 0){
             long chunk = residual % 1000;
@@ -256,13 +256,13 @@ public final class ObscureLib {
                     chunks.add(longToEnglishOrdinal(chunk));
                 } else {
                     if(chunks.isEmpty()){
-                        chunks.add(longToEnglish(chunk) + suffixes[stage] + "th");
+                        chunks.add(longToEnglish(chunk) + ENGLISH_SUFFIXES[stage] + "th");
                     } else {
                         String joiner = ", ";
-                        if((lastAddedStage == -1) && ((number % 1000) < 100)){
+                        if((lastAddedStage == 0) && ((number % 1000) < 100)){
                             joiner = " and ";
                         }
-                        chunks.add(longToEnglish(chunk) + suffixes[stage] + joiner);
+                        chunks.add(longToEnglish(chunk) + ENGLISH_SUFFIXES[stage] + joiner);
                     }
                 }
                 lastAddedStage = stage;
@@ -327,7 +327,6 @@ public final class ObscureLib {
         }
         //We now know the number is at least one greater than Long.MAX_VALUE.
         ArrayList<String> chunks = new ArrayList<>();
-        String[] suffixes = {"", " thousand", " million", " billion", " trillion", " quadrillion", " quintillion", " sextillion", " septillion", " octillion", " nonillion", " decillion", " undecillion", " duodecillion", " tredecillion", " quattuordecillion", " quindecillion", " sexdecillion", " septendecillion", " octodecillion", " novemdecillion", " vigintillion"};
         int stage = 0;
         int lastAddedStage = -1;
         BigInteger residual = number;
@@ -335,7 +334,7 @@ public final class ObscureLib {
             BigInteger[] chop = residual.divideAndRemainder(BIG_THOUSAND);
             long chunk = chop[1].longValue();
             if(chunk > 0){
-                String body = longToEnglish(chunk) + suffixes[stage];
+                String body = longToEnglish(chunk) + ENGLISH_SUFFIXES[stage];
                 String joiner = ", ";
                 if(chunks.isEmpty()){
                     joiner = "";
