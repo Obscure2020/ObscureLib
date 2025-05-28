@@ -4,16 +4,11 @@ import java.util.Arrays;
 
 public final class ObscureLib {
 
-    private static final BigInteger BIG_ZERO = BigInteger.ZERO;
-    private static final BigInteger BIG_ONE = BigInteger.ONE;
-    private static final BigInteger BIG_TWO = BigInteger.TWO;
-    private static final BigInteger BIG_TEN = BigInteger.TEN;
-    private static final BigInteger BIG_TWENTY = BIG_TEN.multiply(BIG_TWO);
-    private static final BigInteger BIG_HUNDRED = BIG_TEN.multiply(BIG_TEN);
-    private static final BigInteger BIG_THOUSAND = BIG_TEN.multiply(BIG_HUNDRED);
-    private static final BigInteger BIG_TEN_THOUSAND = BIG_TEN.multiply(BIG_THOUSAND);
-    private static final BigInteger BIG_LONG_MAX = new BigInteger(Long.toString(Long.MAX_VALUE));
-    private static final BigInteger BIG_UPPER_EXCLUDE = BIG_TEN.pow(66);
+    public static final BigInteger BIG_HUNDRED = BigInteger.TEN.pow(2);
+    public static final BigInteger BIG_THOUSAND = BigInteger.TEN.pow(3);
+    public static final BigInteger BIG_TEN_THOUSAND = BigInteger.TEN.pow(4);
+    public static final BigInteger BIG_LONG_MAX = BigInteger.valueOf(Long.MAX_VALUE);
+    public static final BigInteger BIG_UPPER_EXCLUDE = BigInteger.TEN.pow(66);
 
     private static final String[] ENGLISH_SUFFIXES = {"", " thousand", " million", " billion", " trillion", " quadrillion", " quintillion", " sextillion", " septillion", " octillion", " nonillion", " decillion", " undecillion", " duodecillion", " tredecillion", " quattuordecillion", " quindecillion", " sexdecillion", " septendecillion", " octodecillion", " novemdecillion", " vigintillion"};
 
@@ -303,7 +298,7 @@ public final class ObscureLib {
         }
         StringBuilder sb = new StringBuilder();
         int count = 0;
-        boolean negative = number.compareTo(BIG_ZERO) < 0;
+        boolean negative = number.signum() == -1;
         int stop = negative ? 1 : 0;
         for(int i=plain.length()-1; i>=stop; i--){
             if(count == 3){
@@ -318,7 +313,7 @@ public final class ObscureLib {
     }
 
     public static String bigToEnglish(BigInteger number){
-        if(number.compareTo(BIG_ZERO) < 0){
+        if(number.signum() == -1){
             return "negative " + bigToEnglish(number.negate());
         }
         obscureAssert((number.compareTo(BIG_UPPER_EXCLUDE) < 0), "Currently only BigIntegers in the range (-10^66, 10^66) are supported.");
@@ -330,7 +325,7 @@ public final class ObscureLib {
         int stage = 0;
         int lastAddedStage = -1;
         BigInteger residual = number;
-        while(residual.compareTo(BIG_ZERO) > 0){
+        while(residual.signum() == 1){
             BigInteger[] chop = residual.divideAndRemainder(BIG_THOUSAND);
             long chunk = chop[1].longValue();
             if(chunk > 0){
@@ -353,7 +348,7 @@ public final class ObscureLib {
     }
 
     public static String bigToEnglishOrdinal(BigInteger number){
-        if(number.compareTo(BIG_ZERO) < 0){
+        if(number.signum() == -1){
             return "negative " + bigToEnglishOrdinal(number.negate());
         }
         obscureAssert((number.compareTo(BIG_UPPER_EXCLUDE) < 0), "Currently only BigIntegers in the range (-10^66, 10^66) are supported.");
@@ -365,7 +360,7 @@ public final class ObscureLib {
         int stage = 0;
         int lastAddedStage = -1;
         BigInteger residual = number;
-        while(residual.compareTo(BIG_ZERO) > 0){
+        while(residual.signum() == 1){
             BigInteger[] chop = residual.divideAndRemainder(BIG_THOUSAND);
             long chunk = chop[1].longValue();
             if(chunk > 0){
