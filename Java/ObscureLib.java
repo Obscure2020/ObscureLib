@@ -392,10 +392,16 @@ public final class ObscureLib {
         return sb.toString();
     }
 
-    //bigToEnglishOrdinalSuffix()
+    public static String bigToEnglishOrdinalSuffix(BigInteger number){
+        return longToEnglishOrdinalSuffix(number.remainder(BIG_HUNDRED).longValue());
+    }
 
-    //bigToEnglishOrdinalNumeric()
+    public static String bigToEnglishOrdinalNumeric(BigInteger number){
+        return number.toString() + bigToEnglishOrdinalSuffix(number);
+    }
 
-    //bigToEnglishOrdinalNumericCommas()
+    public static String bigToEnglishOrdinalNumericCommas(BigInteger number){
+        return bigWithCommas(number) + bigToEnglishOrdinalSuffix(number);
+    }
 
 }
