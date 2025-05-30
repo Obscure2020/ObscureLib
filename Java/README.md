@@ -48,20 +48,26 @@ String rightPad(String body, char pad, int length)
 ```java
 String sliceAfter(String full, String match)
 ```
-- Finds the first occurrence of `match` in `full`, and returns the segment of `full` immediately following that occurrence.
+- Finds the first occurrence of `match` in `full`, and returns the segment of `full` starting immediately after that occurrence, and extending to the end of `full`.
 - This will error if `match` is not found in `full`, so it is your responsibility to ensure that `match` is definitely found somewhere in `full` before you call this method.
 
 ```java
 String sliceAfterKeep(String full, String match)
 ```
+- Finds the first occurrence of `match` in `full`, and returns the segment of `full` starting at the beginning of that occurrence, and extending to the end of `full`.
+- This will error if `match` is not found in `full`, so it is your responsibility to ensure that `match` is definitely found somewhere in `full` before you call this method.
 
 ```java
 String sliceBefore(String full, String match)
 ```
+- Finds the first occurrence of `match` in `full`, and returns the segment of `full` starting at the beginning of `full`, and ending immediately before that occurrence.
+- This will error if `match` is not found in `full`, so it is your responsibility to ensure that `match` is definitely found somewhere in `full` before you call this method.
 
 ```java
 String sliceBeforeKeep(String full, String match)
 ```
+- Finds the first occurrence of `match` in `full`, and returns the segment of `full` starting at the beginning of `full`, and extending to the end of that first occurrence.
+- This will error if `match` is not found in `full`, so it is your responsibility to ensure that `match` is definitely found somewhere in `full` before you call this method.
 
 ## String Validation
 
