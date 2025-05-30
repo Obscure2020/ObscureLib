@@ -7,3 +7,9 @@ You are free to take this code and paste it into any of your own projects. If it
 In this project's initial conception (circa May 2025), I'm writing the code in Java first and foremost. I plan to offer ports of the same functionality into other languages further down the line.
 
 \- Joey Sodergren (aka Obscure)
+
+## Language Versions
+
+As of the last time ObscureLib code was updated, the following language versions were used:
+
+- Java 24.0.1
