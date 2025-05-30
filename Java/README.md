@@ -25,6 +25,7 @@ BigInteger BIG_LONG_MAX
 ```java
 BigInteger BIG_UPPER_EXCLUDE
 ```
+- Currently equal to $10^{66}$, or "one unvigintillion." Subject to possible change in the future.
 - A number must be less than `BIG_UPPER_EXCLUDE` and greater than `BIG_UPPER_EXCLUDE.negate()` to be supported by the Number to English Translation methods.
 
 ## String Padding
